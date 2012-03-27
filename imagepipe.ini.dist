@@ -4,13 +4,11 @@ interface = 0.0.0.0
 port = 8085
 
 [replication]
-# Where should other instances connect to replicate data
-# from this one
+# Where should other instances connect to replicate data from this one
 publish = tcp://0.0.0.0:8086
 # publish = ipc:///tmp/imagepipe.sock
 
-# Where should this instance connect to replicate data
-# from another one
+# Where should this instance connect to replicate data from another one
 # subscribe = tcp://127.0.0.1:9086
 
 [images]
