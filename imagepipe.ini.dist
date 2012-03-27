@@ -1,0 +1,31 @@
+[network]
+# The network interface and port to listen on for XML-RPC calls
+interface = 0.0.0.0
+port = 8085
+
+[replication]
+# Where should other instances connect to replicate data
+# from this one
+publish = tcp://0.0.0.0:8086
+# publish = ipc:///tmp/imagepipe.sock
+
+# Where should this instance connect to replicate data
+# from another one
+# subscribe = tcp://127.0.0.1:9086
+
+[images]
+# The root path for stored images
+path = /tmp
+
+# Umask applied on the created images and intermediate directories
+umask = 18 #0022
+
+# Number of threads performing image manipulations (convert instances)
+io_threads = 1
+
+[imagemagick]
+convert = /usr/bin/convert
+# See http://www.imagemagick.org/script/resources.php#environment
+[[env]]
+MAGICK_THREAD_LIMIT = 1
+MAGICK_TIME_LIMIT = 60

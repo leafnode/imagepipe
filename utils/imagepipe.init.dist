@@ -1,0 +1,87 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          imagepipe
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: XML-RPC service for storing images
+# Description:       XML-RPC service for storing images
+### END INIT INFO
+
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+TWISTD="/usr/bin/twistd"
+RUNDIR="/var/run/imagepipe"
+CONFIG="/etc/imagepipe/imagepipe.ini"
+PIDFILE="/var/run/imagepipe/imagepipe.pid"
+LOGFILE="/var/log/imagepipe/imagepipe.log"
+UID=65534
+GID=65534
+DESC="XML-RPC service for storing images"
+NAME=imagepipe
+SCRIPTNAME=/etc/init.d/imagepipe
+
+[ -x "$TWISTD" ] || exit 0
+
+. /lib/init/vars.sh
+. /lib/lsb/init-functions
+
+do_start()
+{
+    start-stop-daemon --start --quiet -c $UID:$GID --pidfile $PIDFILE --exec $TWISTD -- \
+        --rundir=${RUNDIR} --umask=0022 --pidfile $PIDFILE --logfile $LOGFILE\
+        $NAME -c $CONFIG
+    RETVAL="$?"
+    [ "$RETVAL" != 0 ] && return 2
+    return "$RETVAL"
+}
+
+do_stop()
+{
+    start-stop-daemon --stop --quiet --retry=TERM/30/KILL/5 --pidfile $PIDFILE
+    RETVAL="$?"
+    [ "$RETVAL" = 2 ] && return 2
+    return "$RETVAL"
+}
+
+case "$1" in
+  start)
+    [ "$VERBOSE" != no ] && log_daemon_msg "Starting $DESC" "$NAME"
+    do_start
+    case "$?" in
+        0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
+        2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
+    esac
+    ;;
+  stop)
+    [ "$VERBOSE" != no ] && log_daemon_msg "Stopping $DESC" "$NAME"
+    do_stop
+    case "$?" in
+        0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
+        2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
+    esac
+    ;;
+  restart|force-reload)
+    log_daemon_msg "Restarting $DESC" "$NAME"
+    do_stop
+    case "$?" in
+      0|1)
+        do_start
+        case "$?" in
+            0) log_end_msg 0 ;;
+            1) log_end_msg 1 ;;
+            *) log_end_msg 1 ;;
+        esac
+        ;;
+      *)
+        log_end_msg 1
+        ;;
+    esac
+    ;;
+  *)
+    echo "Usage: $SCRIPTNAME {start|stop|restart}" >&2
+    exit 3
+    ;;
+esac
+
+:
