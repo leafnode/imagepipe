@@ -12,7 +12,7 @@ import uuid
 from twisted.application import service
 from twisted.internet import defer, reactor, threads
 from twisted.web import server, xmlrpc
-import txZMQ
+import txzmq
 
 from imagepipe import config
 from imagepipe import image_io
@@ -60,17 +60,17 @@ class ImageService(service.Service):
         generates an unique identifier to distinguish replication messages sent
         by different publisher.
         """
-        self._zmq_factory = txZMQ.ZmqFactory()
+        self._zmq_factory = txzmq.ZmqFactory()
 
         if self._settings['replication']['publish']:
-            pub_endpoint = txZMQ.ZmqEndpoint(
+            pub_endpoint = txzmq.ZmqEndpoint(
                 'bind', self._settings['replication']['publish'])
-            self._pub_connection = txZMQ.ZmqPubConnection(self._zmq_factory,
+            self._pub_connection = txzmq.ZmqPubConnection(self._zmq_factory,
                                                           pub_endpoint)
         if self._settings['replication']['subscribe']:
-            sub_endpoint = txZMQ.ZmqEndpoint(
+            sub_endpoint = txzmq.ZmqEndpoint(
                 'connect', self._settings['replication']['subscribe'])
-            self._sub_connection = txZMQ.ZmqSubConnection(self._zmq_factory,
+            self._sub_connection = txzmq.ZmqSubConnection(self._zmq_factory,
                                                           sub_endpoint)
         if not self._replication_id:
             self._replication_id = uuid.uuid4()

@@ -11,7 +11,7 @@ setup(name='imagepipe',
       data_files=[
           ('twisted/plugins', ['twisted/plugins/imagepipe_plugin.py'])
       ],
-      install_requires=['configobj', 'pyzmq', 'Twisted', 'txZMQ', 'Unidecode'])
+      install_requires=['configobj', 'pyzmq', 'Twisted', 'txzmq', 'Unidecode'])
 
 # Refresh Twisted plugin cache
 from twisted.plugin import IPlugin, getPlugins
